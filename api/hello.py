@@ -1,13 +1,13 @@
-from flask import Flask
+from flask import Flask, jsonify
 
-# Flaskアプリのインスタンスを作成
 app = Flask(__name__)
 
-# ルートURLにアクセスしたときのルート処理
 @app.route('/')
 def hello():
-    return 'Hello, World!'
+    hello = {
+        'greeting': "Hello World!"
+    }
+    return jsonify(hello)
 
-# アプリケーションを実行
 if __name__ == '__main__':
     app.run(debug=True)
