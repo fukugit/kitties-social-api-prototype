@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 flask = "*"
 flask-cors = "*"
+flask-jwt-extended = "*"
 
 [dev-packages]
 
@@ -13,4 +14,4 @@ flask-cors = "*"
 python_version = "3.13"
 
 [scripts]
-start = "python ./api/hello.py"
+start = "python ./run.py"
