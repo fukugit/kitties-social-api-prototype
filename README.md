@@ -23,3 +23,8 @@ pipenv run start
 
 ## 🌐 URL on Local
 http://127.0.0.1:5000
+
+## How to kill
+```
+lsof -i -P | grep 5000
+```
