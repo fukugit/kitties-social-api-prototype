@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from api.config import db
+from api import db
 
 class Cat (db.Model):
     __tablename__ = 'cat_information'
