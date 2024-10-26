@@ -6,6 +6,9 @@ name = "pypi"
 [packages]
 flask = "*"
 colorama = "*"
+flask-sqlalchemy = "*"
+datetime = "*"
+pg8000 = "*"
 
 [dev-packages]
 
