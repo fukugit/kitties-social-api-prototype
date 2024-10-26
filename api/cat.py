@@ -4,6 +4,7 @@ from api.model import Cat
 
 cat_bp = Blueprint('cat', __name__)
 
+# テストapiです
 @cat_bp.route('/cat')
 def get_all_cat():
     cats = db.session.query(Cat)

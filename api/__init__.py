@@ -4,6 +4,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 
+# 環境別用のconfig list
 config = {
     'local': 'env_config.LocalConfig',
     'development': 'env_config.DevelopmentConfig'
@@ -24,6 +25,7 @@ def create_app():
     return api
 
 def add_bluepoint(api):
+    # import順序を変更するため
     from api.cat import cat_bp
     from api.routes import main_bp
     from api.top import top_bp

@@ -3,6 +3,9 @@ from datetime import datetime
 from api import db
 
 class Cat (db.Model):
+    """
+    テスト用モデルです．
+    """
     __tablename__ = 'cat_information'
     __table_args__ = {'schema': 'public'}
 
