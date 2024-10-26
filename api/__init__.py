@@ -5,7 +5,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 
 config = {
-    'local': 'env_config.LocalConfig'
+    'local': 'env_config.LocalConfig',
+    'development': 'env_config.DevelopmentConfig'
 }
 
 db = SQLAlchemy()
@@ -18,7 +19,6 @@ def create_app():
 
     jwt = JWTManager(api)
     db.init_app(api)
-
     add_bluepoint(api)
 
     return api
