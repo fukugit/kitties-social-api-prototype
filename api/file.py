@@ -19,11 +19,22 @@ file_bp = Blueprint('file', __name__, url_prefix='/file')
 @jwt_required()
 def upload_file():
     user_id =  get_jwt_identity()
-    if 'file' not in request.files:
+
+    if 'nickname' not in request.form:
         return jsonify({'status': 'ok',
                         'error_message': 'Lack of parameter',
                         'data': {}}), 400
-    file = request.files['file']
+    check_name_result, nickname = verify_nickname(request.form['nickname'])
+    if not check_name_result:
+        return jsonify({'status': 'ok',
+                        'error_message': 'Illegal parameter',
+                        'data': {}}), 400
+
+    if 'file' not in request.files or len(request.files.getlist('file')) != 1:
+        return jsonify({'status': 'ok',
+                        'error_message': 'Lack of parameter',
+                        'data': {}}), 400
+    file = request.files.getlist('file')[0]
     if not verify_uploaded_image(file):
         return jsonify({'status': 'ok',
                         'error_message': 'Illegal parameter',
@@ -40,6 +51,8 @@ def upload_file():
         region_name=current_app.config['S3_REGION']
     )
     s3 = session.client('s3', endpoint_url=current_app.config['S3_ENDPOINT'])
+
+    # image upload
     try:
         s3.put_object(Body=file, Bucket=current_app.config['S3_BUCKET_NAME'], Key='pedigree/' + str(user_id) + '/' + upload_image_name, ContentType=file.content_type)
     except Exception as e:
@@ -48,7 +61,8 @@ def upload_file():
                         'error_message': 'Upload failed',
                         'data': {}}), 500
 
-    cat = Cat(name=None, breed=None, nickname=request.form['nickname'])
+    # Catと血統書recordを追加
+    cat = Cat(name=None, breed=None, nickname=nickname)
     db.session.add(cat)
     db.session.flush()
     pedigree = Pedigree(cat_id=cat.id, upload_user_id=user_id, file_name=upload_image_name)
@@ -61,6 +75,17 @@ def upload_file():
                     'data': {
                         'pedigree_id': pedigree.id
                     }}), 200
+
+def verify_nickname(nickname):
+    nickname = nickname.strip()
+
+    # 長さ制限
+    # if len(nickname) > XX
+
+    # 特殊文字
+    # if not re.match('XXX', nick_name)
+
+    return True, nickname
 
 def verify_uploaded_image(file):
     # 拡張子check
@@ -91,14 +116,17 @@ def verify_uploaded_image(file):
 
     return True
 
-@file_bp.route('/pedigree',  methods=['GET'])
+@file_bp.route('/pedigree/<pedigree_id>',  methods=['GET'])
 @jwt_required()
-def get_file():
+def get_file(pedigree_id):
     user_id =  get_jwt_identity()
-    data = request.json
-    pedigree = db.session.query(Pedigree).get(data['pedigree_id'])
+    if (pedigree_id is None) or (not pedigree_id.isdigit()):
+        return jsonify({'status': 'ok',
+                        'error_message': 'Illegal parameter',
+                        'data': {}}), 400
+    pedigree = db.session.query(Pedigree).get(pedigree_id)
 
-    if (pedigree is None) or (not check_file_permission(user_id, pedigree.upload_user_id)):
+    if not check_file_permission(user_id, pedigree.upload_user_id):
         return jsonify({'status': 'ok',
                         'error_message': 'Illegal parameter',
                         'data': {}}), 400
