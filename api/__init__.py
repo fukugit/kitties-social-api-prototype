@@ -30,10 +30,10 @@ def add_bluepoint(api):
     from api.routes import main_bp
     from api.top import top_bp
     from api.auth import auth_bp
-    from api.upload import upload_bp
+    from api.file import file_bp
     # Blueprint
     api.register_blueprint(main_bp)
     api.register_blueprint(top_bp)
     api.register_blueprint(auth_bp)
     api.register_blueprint(cat_bp)
-    api.register_blueprint(upload_bp)
+    api.register_blueprint(file_bp)

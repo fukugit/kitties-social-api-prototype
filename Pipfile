@@ -12,6 +12,8 @@ flask-sqlalchemy = "*"
 pg8000 = "*"
 datetime = "*"
 boto3 = "*"
+pillow = "*"
+uuid = "*"
 
 [dev-packages]
 

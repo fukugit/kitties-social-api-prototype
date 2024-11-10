@@ -6,17 +6,19 @@ class Cat (db.Model):
     """
     テスト用モデルです．
     """
-    __tablename__ = 'cat_information'
+    __tablename__ = 'cat'
     __table_args__ = {'schema': 'public'}
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
     breed = db.Column(db.String(255))
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    nickname = db.Column(db.String(255))
 
-    def __init__(self, name, breed):
+    def __init__(self, name, breed, nickname):
         self.name = name
         self.breed = breed
+        self.nickname = nickname
 
     def __repr__(self):
-        return f"<Product(id={self.id}, name={self.name}, breed={self.breed}, created_at={self.created_at})>"
+        return f"<Cat(id={self.id}, name={self.name}, breed={self.breed}, created_at={self.created_at})>"
