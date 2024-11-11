@@ -57,7 +57,7 @@ def upload_file():
         s3.put_object(Body=file, Bucket=current_app.config['S3_BUCKET_NAME'], Key='pedigree/' + str(user_id) + '/' + upload_image_name, ContentType=file.content_type)
     except Exception as e:
         print(f"An unexpected upload error occurred: {e}")
-        return jsonify({'status': 'ok',
+        return jsonify({'status': 'bad',
                         'error_message': 'Upload failed',
                         'data': {}}), 500
 
@@ -150,7 +150,7 @@ def get_file(pedigree_id):
         )
     except Exception as e:
         print(f"An unexpected download error occurred: {e}")
-        return jsonify({'status': 'ok',
+        return jsonify({'status': 'bad',
                         'error_message': 'download failed',
                         'data': {}}), 500
 
