@@ -6,7 +6,7 @@ class Cat (db.Model):
     """
     テスト用モデルです．
     """
-    __tablename__ = 'cat'
+    __tablename__ = 'cat_information'
     __table_args__ = {'schema': 'public'}
 
     id = db.Column(db.Integer, primary_key=True)
