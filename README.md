@@ -11,7 +11,7 @@ pipenv sync
 ```
 or
 ```
-pipenv instal
+pipenv install
 ```
 
 
