@@ -19,6 +19,8 @@ class LocalConfig:
     ALLOWED_IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png']
     # 5MB 1024*1024*5
     ALLOWED_MAXIMUM_IMAGE_SIZE = 5242880
+    # nickName最大文字数
+    ALLOWED_MAXIMUM_NICKNAME_LENGTH = 100
 
 # 環境変数でmode=developmentを設定すれば利用可能
 class DevelopmentConfig:
@@ -41,3 +43,4 @@ class DevelopmentConfig:
 
     ALLOWED_IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png']
     ALLOWED_MAXIMUM_IMAGE_SIZE = 5242880
+    ALLOWED_MAXIMUM_NICKNAME_LENGTH = 100

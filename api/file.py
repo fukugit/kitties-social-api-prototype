@@ -12,6 +12,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from api import db
 from api.model import Cat
 from api.model.pedigree import Pedigree
+from utils.response import create_response
 
 file_bp = Blueprint('file', __name__, url_prefix='/file')
 
@@ -21,24 +22,18 @@ def upload_file():
     user_id =  get_jwt_identity()
 
     if 'nickname' not in request.form:
-        return jsonify({'status': 'ok',
-                        'error_message': 'Lack of parameter',
-                        'data': {}}), 400
+        return create_response(message='Lack of parameter', code=-1, http_status=400)
+
     check_name_result, nickname = verify_nickname(request.form['nickname'])
     if not check_name_result:
-        return jsonify({'status': 'ok',
-                        'error_message': 'Illegal parameter',
-                        'data': {}}), 400
+        return create_response(message='Illegal parameter', code=-1, http_status=400)
 
     if 'file' not in request.files or len(request.files.getlist('file')) != 1:
-        return jsonify({'status': 'ok',
-                        'error_message': 'Lack of parameter',
-                        'data': {}}), 400
+        return create_response(message='Lack of parameter', code=-1, http_status=400)
+
     file = request.files.getlist('file')[0]
     if not verify_uploaded_image(file):
-        return jsonify({'status': 'ok',
-                        'error_message': 'Illegal parameter',
-                        'data': {}}), 400
+        return create_response(message='Illegal parameter', code=-1, http_status=400)
 
     # uuidでファイル名を作成
     unique_id = uuid.uuid4().hex
@@ -57,9 +52,7 @@ def upload_file():
         s3.put_object(Body=file, Bucket=current_app.config['S3_BUCKET_NAME'], Key='pedigree/' + str(user_id) + '/' + upload_image_name, ContentType=file.content_type)
     except Exception as e:
         print(f"An unexpected upload error occurred: {e}")
-        return jsonify({'status': 'bad',
-                        'error_message': 'Upload failed',
-                        'data': {}}), 500
+        return create_response(message='Upload failed', code=-1, http_status=500)
 
     # Catと血統書recordを追加
     cat = Cat(name=None, breed=None, nickname=nickname)
@@ -69,18 +62,14 @@ def upload_file():
     db.session.add(pedigree)
     db.session.flush()
     db.session.commit()
-
-    return jsonify({'status': 'ok',
-                    'error_message': '',
-                    'data': {
-                        'pedigree_id': pedigree.id
-                    }}), 200
+    return create_response(data={'pedigree_id': pedigree.id})
 
 def verify_nickname(nickname):
     nickname = nickname.strip()
 
     # 長さ制限
-    # if len(nickname) > XX
+    if len(nickname) > 100:
+        return False, ''
 
     # 特殊文字
     # if not re.match('XXX', nick_name)
@@ -121,15 +110,12 @@ def verify_uploaded_image(file):
 def get_file(pedigree_id):
     user_id =  get_jwt_identity()
     if (pedigree_id is None) or (not pedigree_id.isdigit()):
-        return jsonify({'status': 'ok',
-                        'error_message': 'Illegal parameter',
-                        'data': {}}), 400
+        return create_response(message='Illegal parameter', code=-1, http_status=400)
+
     pedigree = db.session.query(Pedigree).get(pedigree_id)
 
     if not check_file_permission(user_id, pedigree.upload_user_id):
-        return jsonify({'status': 'ok',
-                        'error_message': 'Illegal parameter',
-                        'data': {}}), 400
+        return create_response(message='Illegal parameter', code=-1, http_status=400)
 
     # Supabase storage(s3) connectionを用意
     session = boto3.Session(
@@ -150,9 +136,7 @@ def get_file(pedigree_id):
         )
     except Exception as e:
         print(f"An unexpected download error occurred: {e}")
-        return jsonify({'status': 'bad',
-                        'error_message': 'download failed',
-                        'data': {}}), 500
+        return create_response(message='Download failed', code=-1, http_status=500)
 
 def check_file_permission(user_id, upload_user_id):
     # companyに関するのは考慮しない / 管理者に関するのも考慮しない
