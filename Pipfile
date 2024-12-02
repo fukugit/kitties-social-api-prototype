@@ -9,8 +9,11 @@ flask-cors = "*"
 flask-jwt-extended = "*"
 colorama = "*"
 flask-sqlalchemy = "*"
-datetime = "*"
 pg8000 = "*"
+datetime = "*"
+boto3 = "*"
+pillow = "*"
+uuid = "*"
 
 [dev-packages]
 
