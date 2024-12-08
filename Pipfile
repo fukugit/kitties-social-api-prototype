@@ -14,6 +14,7 @@ datetime = "*"
 boto3 = "*"
 pillow = "*"
 uuid = "*"
+stripe = "*"
 
 [dev-packages]
 
