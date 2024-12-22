@@ -32,6 +32,7 @@ def add_bluepoint(api):
     from api.auth import auth_bp
     from api.file import file_bp
     from api.stripe import stripe_bp
+    from api.payment_intent import payment_intent_bp
     # Blueprint
     api.register_blueprint(main_bp)
     api.register_blueprint(top_bp)
@@ -39,3 +40,4 @@ def add_bluepoint(api):
     api.register_blueprint(cat_bp)
     api.register_blueprint(file_bp)
     api.register_blueprint(stripe_bp)
+    api.register_blueprint(payment_intent_bp)
