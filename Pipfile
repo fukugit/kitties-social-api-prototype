@@ -14,8 +14,10 @@ datetime = "*"
 boto3 = "*"
 pillow = "*"
 uuid = "*"
+stripe = "*"
 
 [dev-packages]
+stripe = "*"
 
 [requires]
 python_version = "3.13"
